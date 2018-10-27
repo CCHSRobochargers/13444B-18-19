@@ -131,9 +131,7 @@ void pre_auton()
 //positive dist is left for spin
 task autonomous()
 {
-	fork(-10, 50, false);  //red flag
-	move(42, 127, false);
-	fork(8, 50, true);
+	arm(10, 50, false);
 	/*
 	fork(-10, 50, false);  //red flag
 	move(12, 127, false);
