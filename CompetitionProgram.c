@@ -13,7 +13,7 @@
 #pragma config(Motor,  port1,           middleleft,    tmotorVex393_HBridge, openLoop, reversed)
 #pragma config(Motor,  port2,           backright,     tmotorVex393_MC29, PIDControl, reversed, encoderPort, I2C_3)
 #pragma config(Motor,  port3,           backleft,      tmotorVex393_MC29, PIDControl, encoderPort, I2C_2)
-#pragma config(Motor,  port4,           servo,         tmotorServoStandard, openLoop)
+#pragma config(Motor,  port4,           backarm,       tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port5,           forks,         tmotorVex393_MC29, PIDControl, encoderPort, I2C_5)
 #pragma config(Motor,  port6,           frontleft,     tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port7,           frontright,    tmotorVex393_MC29, openLoop, reversed)
@@ -191,7 +191,6 @@ void skills(void)
 	move(24, 127, false);
 	spin(-90, 127, false);
 	move(12, 127, false);
-	motor[servo] = 50;
 }
 
 task autonomous()
@@ -241,7 +240,7 @@ task usercontrol()
 	// User control code here, inside the loop
 
 	int temp;
-	//variable to
+	//variable to stop drive train drift
 
 	//PID fixup
 	nMotorPIDSpeedCtrl[backleft] = RegIdle;
@@ -303,19 +302,19 @@ task usercontrol()
 			motor[forks] = 5;		//
 		}
 
-
-		if(vexRT[Btn8UXmtr2] == 1)		//Servo
+		motor[backarm] = vexRT[Ch2Xmtr2];		//back arm
+		/*	if(vexRT[Xmtr2] == 1)
 		{
-			motor[servo] = 127;
+		motor[servo] = 127;
 		}
 		else if(vexRT[Btn8DXmtr2] == 1)
 		{
-			motor[servo] = 127;
+		motor[servo] = 127;
 		}
 		else
 		{
-			motor[servo] = 0;
-		}
+		motor[servo] = 0;
+		}*/
 		delay(10);
 	}
 }
