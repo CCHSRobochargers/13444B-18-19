@@ -3,6 +3,7 @@
 #pragma config(Sensor, dgtl2,  autonomous2,    sensorDigitalIn)
 #pragma config(Sensor, dgtl6,  autonomous6,    sensorDigitalIn)
 #pragma config(Sensor, dgtl7,  autonomous7,    sensorDigitalIn)
+#pragma config(Sensor, dgtl8,  autonomous8,    sensorDigitalIn)
 #pragma config(Sensor, dgtl11, autonomous11,   sensorDigitalIn)
 #pragma config(Sensor, dgtl12, autonomous12,   sensorDigitalIn)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -168,7 +169,7 @@ void red_close(void)
 	arm(5, 127, false);
 	move(78, 127, false);
 	spin(90, 127, false);
-	move(57, 127, false);
+	move(59, 127, false);
 }
 
 void blue_close(void)
@@ -177,12 +178,18 @@ void blue_close(void)
 	move(78, 127, false);
 	spin(-90, 127, false);
 	arm(4, 127, false);
-	move(57, 127, false);
+	move(59, 127, false);
 }
 
 void flag(void)
 {
 	move(-47, 127, false);
+}
+
+void cap(void)
+{
+	move(44, 127, false);
+	spin(-90, 127, false);
 }
 
 void skills(void)
@@ -213,6 +220,11 @@ task autonomous()
 	else if(!SensorValue(autonomous7))
 	{
 		skills();
+	}
+
+	else if(!SensorValue(autonomous8))
+	{
+		cap();
 	}
 
 	else if(!SensorValue(autonomous11))
@@ -302,19 +314,8 @@ task usercontrol()
 			motor[forks] = 5;		//
 		}
 
-		motor[backarm] = vexRT[Ch2Xmtr2];		//back arm
-		/*	if(vexRT[Xmtr2] == 1)
-		{
-		motor[servo] = 127;
-		}
-		else if(vexRT[Btn8DXmtr2] == 1)
-		{
-		motor[servo] = 127;
-		}
-		else
-		{
-		motor[servo] = 0;
-		}*/
+		motor[backarm] = vexRT[Ch2Xmtr2];		//backarm
+
 		delay(10);
 	}
 }
