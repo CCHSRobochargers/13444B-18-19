@@ -254,6 +254,10 @@ task usercontrol()
 	int temp;
 	//variable to stop drive train drift
 
+	bool halfspeed = false;
+	//tempright = vexRT[Ch2]
+	//templeft = vexRT[Ch3];
+
 	//PID fixup
 	nMotorPIDSpeedCtrl[backleft] = RegIdle;
 	nMotorPIDSpeedCtrl[backright] = RegIdle;
@@ -264,9 +268,13 @@ task usercontrol()
 	while (true)
 	{
 		temp = vexRT[Ch2];		//Back right motor (front and middle right motors are slaved to back right motor)
-		if((temp < -10) || (temp > 10))
+		if((temp < -10) || (temp > 10) && halfspeed == true)
 		{
-			motor[backright]  = temp;
+			motor[backright]  = temp / 2;
+		}
+		else if((temp < -10) || (temp > 10) && halfspeed == false)
+		{
+			motor[backright] = temp;
 		}
 		else
 		{
@@ -274,7 +282,11 @@ task usercontrol()
 		}
 
 		temp = vexRT[Ch3];		//Back left motor (front and middle left motors are slaved to back left motor)
-		if((temp < -10) || (temp > 10))
+		if((temp < -10) || (temp > 10) && halfspeed == true)
+		{
+			motor[backleft]  = temp / 2;
+		}
+		else if((temp < -10) || (temp > 10) && halfspeed == false)
 		{
 			motor[backleft] = temp;
 		}
