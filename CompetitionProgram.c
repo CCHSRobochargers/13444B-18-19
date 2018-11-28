@@ -11,7 +11,7 @@
 #pragma config(Sensor, I2C_3,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_4,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_5,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
-#pragma config(Motor,  port1,           middleleft,    tmotorVex393_HBridge, openLoop)
+#pragma config(Motor,  port1,           middleleft,    tmotorVex393_HBridge, openLoop, reversed)
 #pragma config(Motor,  port2,           backright,     tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port3,           backleft,      tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port4,           backarm,       tmotorVex393_MC29, PIDControl, reversed, encoderPort, I2C_3)
@@ -47,7 +47,7 @@ static const float ticksPerArmInch = 1366.0/27.0;
 
 static const float ticksPerForkInch = 94.0;
 
-static const float ticksPerBackInch = 50.0;
+static const float ticksPerBackInch = 9.9;
 
 void move(float dist, int speed, bool hold)
 {
@@ -131,8 +131,8 @@ void pre_auton()
 
 	slaveMotor(backright, frontright);
 	slaveMotor(backleft, frontleft);
-	slaveMotor(middleright, backright);
-	slaveMotor(middleleft, backleft);
+	slaveMotor(middleright, frontright);
+	slaveMotor(middleleft, frontleft);
 	//slaveMotor(leftarm, rightarm);
 	//make the back and middle motors copy what the front motors do because they don't have encoders
 
@@ -157,12 +157,13 @@ void pre_auton()
 
 void red_far(void)
 {
+	arm(10, 127, false);
 	move(6, 127, false);		//red_far (platform)
-	spin(90, 127, false);
-	move(24, 127, false);
-	arm(5, 127, false);
-	spin(-90, 127, false);
-	move(50, 127, false);
+	spin(95, 127, false);
+	move(28, 127, false);
+	armback(10, 127, true);
+	spin(-86, 127, false);
+	move(65, 127, false);
 }
 
 void blue_far(void)
@@ -179,9 +180,11 @@ void red_close(void)
 {
 	move(-47, 127, false);		//red_close (flag + platform)
 	arm(5, 127, false);
-	move(78, 127, false);
+	move(8, 127, false);
+	armback(9, 127, true);
+	move(72, 127, false);
 	spin(90, 127, false);
-	move(59, 127, false);
+	move(70, 127, false);
 }
 
 void blue_close(void)
@@ -210,6 +213,26 @@ void skills(void)
 	move(24, 127, false);
 	spin(-90, 127, false);
 	move(12, 127, false);
+	armback(50, 127, false);
+	move(24, 127, false);
+	spin(90, 127, false);
+	move(-24, 127, false);
+	move(24, 127, false);
+	spin(90, 127, false);
+	move(-48, 127, false);
+	armback(50, 127, false);
+	move(-24, 127, false);
+	spin(90, 127, false);
+	move(-24, 127, false);
+	move(24, 127, false);
+	spin(-90, 127, false);
+	move(120, 127, false);
+	spin(90, 127, false);
+	move(48, 127, false);
+	spin(90, 127, false);
+	arm(8, 127, false);
+	armback(10, 127, false);
+	move(72, 127, false);
 }
 
 task autonomous()
@@ -280,32 +303,41 @@ task usercontrol()
 
 	while (true)
 	{
-		temp = vexRT[Ch2];		//Back right motor (front and middle right motors are slaved to back right motor)
+		if(vexRT[Btn6D] == 1)
+		{
+			halfspeed = true;
+		}
+		else if(vexRT[Btn6U] == 1)
+		{
+			halfspeed = false;
+		}
+
+		temp = vexRT[Ch2];		//Back right motor (back and middle right motors are slaved to front right motor)
 		if((temp < -10) || (temp > 10) && halfspeed == true)
 		{
-			motor[backright]  = temp / 2;
+			motor[frontright]  = temp / 2;
 		}
 		else if((temp < -10) || (temp > 10) && halfspeed == false)
 		{
-			motor[backright] = temp;
+			motor[frontright] = temp;
 		}
 		else
 		{
-			motor[backright] = 0;
+			motor[frontright] = 0;
 		}
 
 		temp = vexRT[Ch3];		//Back left motor (front and middle left motors are slaved to back left motor)
 		if((temp < -10) || (temp > 10) && halfspeed == true)
 		{
-			motor[backleft]  = temp / 2;
+			motor[frontleft]  = temp / 2;
 		}
 		else if((temp < -10) || (temp > 10) && halfspeed == false)
 		{
-			motor[backleft] = temp;
+			motor[frontleft] = temp;
 		}
 		else
 		{
-			motor[backleft] = 0;
+			motor[frontleft] = 0;
 		}
 
 
@@ -337,14 +369,6 @@ task usercontrol()
 		else
 		{
 			motor[forks] = 5;		//
-		}
-		if(vexRT[Btn6U] == 1)
-		{
-			halfspeed = false;
-		}
-		else if(vexRT[Btn6D] == 1)
-		{
-			halfspeed = true;
 		}
 
 		motor[backarm] = vexRT[Ch2Xmtr2];		//backarm
