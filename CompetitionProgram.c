@@ -178,22 +178,24 @@ void blue_far(void)
 
 void red_close(void)
 {
-	move(-47, 127, false);		//red_close (flag + platform)
+	move(-48, 127, false);		//red_close (flag + platform)
 	arm(5, 127, false);
 	move(8, 127, false);
 	armback(9, 127, true);
-	move(72, 127, false);
+	move(66, 127, false);
 	spin(90, 127, false);
-	move(70, 127, false);
+	move(63, 127, false);
 }
 
 void blue_close(void)
 {
-	move(-47, 127, false);		//blue_close (flag + platform)
-	move(78, 127, false);
+	move(-48, 127, false);		//blue_close (flag + platform)
+	arm(5, 127, false);
+	move(8, 127, false);
+	armback(9, 127, true);
+	move(66, 127, false);
 	spin(-90, 127, false);
-	arm(4, 127, false);
-	move(59, 127, false);
+	move(63, 127, false);
 }
 
 void flag(void)
