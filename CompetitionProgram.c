@@ -173,29 +173,29 @@ void blue_far(void)
 	move(24, 127, false);
 	arm(5, 127, false);
 	spin(90, 127, false);
-	move(50, 127, false);
+	move(60, 127, false);
 }
 
 void red_close(void)
 {
-	move(-48, 127, false);		//red_close (flag + platform)
+	move(-49, 127, false);		//red_close (flag + platform)
 	arm(5, 127, false);
 	move(8, 127, false);
 	armback(9, 127, true);
 	move(66, 127, false);
 	spin(90, 127, false);
-	move(63, 127, false);
+	move(64, 127, false);
 }
 
 void blue_close(void)
 {
-	move(-48, 127, false);		//blue_close (flag + platform)
+	move(-49, 127, false);		//blue_close (flag + platform)
 	arm(5, 127, false);
 	move(8, 127, false);
 	armback(9, 127, true);
 	move(66, 127, false);
 	spin(-90, 127, false);
-	move(63, 127, false);
+	move(64, 127, false);
 }
 
 void flag(void)
