@@ -1,9 +1,10 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, dgtl1,  autonomous1,    sensorDigitalIn)
 #pragma config(Sensor, dgtl2,  autonomous2,    sensorDigitalIn)
+#pragma config(Sensor, dgtl3,  autonomous3,    sensorDigitalIn)
 #pragma config(Sensor, dgtl6,  autonomous6,    sensorDigitalIn)
 #pragma config(Sensor, dgtl7,  autonomous7,    sensorDigitalIn)
-#pragma config(Sensor, dgtl8,  autonomous8,    sensorDigitalIn)
+#pragma config(Sensor, dgtl10, autonomous10,   sensorDigitalIn)
 #pragma config(Sensor, dgtl11, autonomous11,   sensorDigitalIn)
 #pragma config(Sensor, dgtl12, autonomous12,   sensorDigitalIn)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -157,13 +158,12 @@ void pre_auton()
 
 void red_far(void)
 {
-	arm(10, 127, false);
-	move(6, 127, false);		//red_far (platform)
-	spin(95, 127, false);
-	move(28, 127, false);
-	armback(10, 127, true);
-	spin(-86, 127, false);
-	move(65, 127, false);
+	move(6, 127, false);		//blue_far (platform)
+	spin(90, 127, false);
+	move(24, 127, false);
+	arm(5, 127, false);
+	spin(-90, 127, false);
+	move(55, 127, false);
 }
 
 void blue_far(void)
@@ -173,16 +173,16 @@ void blue_far(void)
 	move(24, 127, false);
 	arm(5, 127, false);
 	spin(90, 127, false);
-	move(60, 127, false);
+	move(55, 127, false);
 }
 
 void red_close(void)
 {
 	move(-49, 127, false);		//red_close (flag + platform)
 	arm(5, 127, false);
-	move(8, 127, false);
+	//move(8, 127, false);
+	move(74, 127, false);
 	armback(9, 127, true);
-	move(66, 127, false);
 	spin(90, 127, false);
 	move(64, 127, false);
 }
@@ -191,22 +191,34 @@ void blue_close(void)
 {
 	move(-49, 127, false);		//blue_close (flag + platform)
 	arm(5, 127, false);
-	move(8, 127, false);
+	//move(8, 127, false);
+	move(74, 127, false);
 	armback(9, 127, true);
-	move(66, 127, false);
 	spin(-90, 127, false);
 	move(64, 127, false);
 }
 
-void flag(void)
+void red_cap(void)
 {
-	move(-47, 127, false);
+	move(38, 127, false);
+	spin(90, 127, false);
+	arm(5, 127, true);
+	armback(9, 127, true);
+	move(36, 127, false);
 }
 
-void cap(void)
+void blue_cap(void)
 {
-	move(44, 127, false);
+	move(38, 127, false);
 	spin(-90, 127, false);
+	arm(5, 127, true);
+	armback(9, 127, true);
+	move(36, 127, false);
+}
+
+void flag(void)
+{
+	move(-49, 127, false);
 }
 
 void skills(void)
@@ -249,6 +261,11 @@ task autonomous()
 		red_far();
 	}
 
+	else if(!SensorValue(autonomous3))
+	{
+		red_cap();
+	}
+
 	else if(!SensorValue(autonomous6))
 	{
 		flag();
@@ -259,9 +276,9 @@ task autonomous()
 		skills();
 	}
 
-	else if(!SensorValue(autonomous8))
+	else if(!SensorValue(autonomous10))
 	{
-		cap();
+		blue_cap();
 	}
 
 	else if(!SensorValue(autonomous11))
